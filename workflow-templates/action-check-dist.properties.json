@@ -1,0 +1,12 @@
+{
+    "name": "Nayrid Node Action: Check dist/",
+    "description": "Nayrid workflow to check dist/ folder contents",
+    "categories": [
+        "deployment",
+        "JavaScript"
+    ],
+    "filePatterns": [
+        "action.yaml",
+        "action.yml"
+    ]
+}

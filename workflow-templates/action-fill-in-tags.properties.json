@@ -1,0 +1,11 @@
+{
+    "name": "Nayrid GH Action: Fill in tags",
+    "description": "Nayrid workflow to fill in tags when releasing a GitHub Action",
+    "categories": [
+        "deployment"
+    ],
+    "filePatterns": [
+        "action.yaml",
+        "action.yml"
+    ]
+}
