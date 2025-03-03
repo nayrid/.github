@@ -10,10 +10,10 @@ on:
         default: 21
     secrets:
       MAVEN_NAME:
-        description: "kokiriglade repo username"
+        description: "nayrid repo username"
         required: true
       MAVEN_TOKEN:
-        description: "kokiriglade repo password"
+        description: "nayrid  repo password"
         required: true
 
 concurrency:
@@ -50,13 +50,13 @@ jobs:
           fi
       - name: "publish to snapshots"
         if: "${{ env.STATUS != 'release' && github.event_name == 'push' && github.ref == 'refs/heads/trunk' }}"
-        run: ./gradlew build publishAllPublicationsToKokirigladeSnapshotsRepository
+        run: ./gradlew build publishAllPublicationsToNayridSnapshotsRepository
         env:
           MAVEN_NAME: "${{ secrets.MAVEN_NAME }}"
           MAVEN_TOKEN: "${{ secrets.MAVEN_TOKEN }}"
       - name: "publish to releases"
         if: "${{ env.STATUS == 'release' && github.event_name == 'release' }}"
-        run: ./gradlew build publishAllPublicationsToKokirigladeReleasesRepository
+        run: ./gradlew build publishAllPublicationsToNayridReleasesRepository
         env:
           MAVEN_NAME: "${{ secrets.MAVEN_NAME }}"
           MAVEN_TOKEN: "${{ secrets.MAVEN_TOKEN }}"

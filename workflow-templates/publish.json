@@ -1,6 +1,6 @@
 {
     "name": "Nayrid CI",
-    "description": "Nayrid workflow to publish to repo.kokirigla.de",
+    "description": "Nayrid workflow to publish to repo.nayrid.com",
     "categories": [
         "Java"
     ],
