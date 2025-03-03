@@ -50,6 +50,21 @@ jobs:
           fi
       - name: "print status"
         run: echo "STATUS is ${{ env.STATUS }} and event_name is ${{ github.event_name }}"
+      - name: "Check secrets access"
+        run: |
+          if [[ -z "${{ secrets.MAVEN_NAME }}" ]]; then
+            echo "❌ MAVEN_NAME secret is NOT accessible!"
+          else
+            echo "✅ MAVEN_NAME secret is available."
+          fi
+      - name: "Check secrets access"
+        run: |
+          if [[ -z "${{ secrets.MAVEN_TOKEN }}" ]]; then
+            echo "❌ MAVEN_TOKEN secret is NOT accessible!"
+          else
+            echo "✅ MAVEN_TOKEN secret is available."
+          fi
+
       - name: "publish to snapshots"
         if: "${{ env.STATUS != 'release' && github.event_name == 'push' && github.ref == 'refs/heads/trunk' }}"
         run: ./gradlew build publishAllPublicationsToKokirigladeSnapshotsRepository
