@@ -8,5 +8,5 @@ on:
 
 jobs:
   call-build:
-    uses: "nayrid/.github/.github/workflows/shared-ci.yaml@trunk"
+    uses: "nayrid/.github/.github/workflows/shared-publish.yaml@trunk"
     secrets: "inherit"

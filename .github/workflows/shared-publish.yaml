@@ -1,0 +1,64 @@
+name: Run CI
+
+on:
+  workflow_call:
+    inputs:
+      runtime_version:
+        description: "The default Java runtime version to run builds on"
+        required: false
+        type: number
+        default: 21
+    secrets:
+      MAVEN_NAME:
+        description: "kokiriglade repo username"
+        required: false
+      MAVEN_TOKEN:
+        description: "kokiriglade repo password"
+        required: false
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.number || github.ref }}"
+  cancel-in-progress: true
+
+permissions:
+  actions: "write"
+  contents: "read"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checkout git repository"
+        uses: actions/checkout@v4
+      - name: "set execute permission for gradle wrapper"
+        run: chmod +x ./gradlew
+      - name: "validate gradle wrapper"
+        uses: gradle/actions/wrapper-validation@v4
+      - name: "setup jdk"
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "${{ inputs.runtime_version }}"
+      - name: "setup gradle"
+        uses: gradle/actions/setup-gradle@v4
+      - name: "determine snapshot status"
+        run: |
+          if [ "$(./gradlew properties | awk '/^version:/ { print $2; }' | grep '\-SNAPSHOT')" ]; then
+            echo "STATUS=snapshot" >> $GITHUB_ENV
+          else
+            echo "STATUS=release" >> $GITHUB_ENV
+          fi
+      - name: "print status"
+        run: echo "STATUS is ${{ env.STATUS }} and event_name is ${{ github.event_name }}"
+      - name: "publish to snapshots"
+        if: "${{ env.STATUS != 'release' && github.event_name == 'push' && github.ref == 'refs/heads/trunk' }}"
+        run: ./gradlew build publishAllPublicationsToKokirigladeSnapshotsRepository
+        env:
+          MAVEN_NAME: "${{ secrets.MAVEN_NAME }}"
+          MAVEN_SECRET: "${{ secrets.MAVEN_SECRET }}"
+      - name: "publish to releases"
+        if: "${{ env.STATUS == 'release' && github.event_name == 'release' }}"
+        run: ./gradlew build publishAllPublicationsToKokirigladeReleasesRepository
+        env:
+          MAVEN_NAME: "${{ secrets.MAVEN_NAME }}"
+          MAVEN_SECRET: "${{ secrets.MAVEN_SECRET }}"

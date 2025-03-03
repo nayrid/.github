@@ -1,6 +1,6 @@
 {
     "name": "Nayrid CI",
-    "description": "Nayrid workflow to perform standard Java CI steps, including building, testing, and deployment",
+    "description": "Nayrid workflow to publish to repo.kokirigla.de",
     "categories": [
         "Java"
     ],
