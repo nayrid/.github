@@ -11,10 +11,10 @@ on:
     secrets:
       MAVEN_NAME:
         description: "kokiriglade repo username"
-        required: false
+        required: true
       MAVEN_TOKEN:
         description: "kokiriglade repo password"
-        required: false
+        required: true
 
 concurrency:
   group: "${{ github.workflow }}-${{ github.event.number || github.ref }}"
@@ -55,10 +55,10 @@ jobs:
         run: ./gradlew build publishAllPublicationsToKokirigladeSnapshotsRepository
         env:
           MAVEN_NAME: "${{ secrets.MAVEN_NAME }}"
-          MAVEN_SECRET: "${{ secrets.MAVEN_SECRET }}"
+          MAVEN_TOKEN: "${{ secrets.MAVEN_TOKEN }}"
       - name: "publish to releases"
         if: "${{ env.STATUS == 'release' && github.event_name == 'release' }}"
         run: ./gradlew build publishAllPublicationsToKokirigladeReleasesRepository
         env:
           MAVEN_NAME: "${{ secrets.MAVEN_NAME }}"
-          MAVEN_SECRET: "${{ secrets.MAVEN_TOKEN }}"
+          MAVEN_TOKEN: "${{ secrets.MAVEN_TOKEN }}"
