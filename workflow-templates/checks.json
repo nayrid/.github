@@ -1,0 +1,11 @@
+{
+    "name": "Nayrid CI",
+    "description": "Nayrid workflow to run checks",
+    "categories": [
+        "Java"
+    ],
+    "filePatterns": [
+        "settings.gradle(?:.kts)?",
+        "build.gradle(?:.kts)?"
+    ]
+}

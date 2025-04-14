@@ -1,0 +1,38 @@
+name: Checks
+
+on:
+  workflow_call:
+    inputs:
+      runtime_version:
+        description: "The default Java runtime version to run builds on"
+        required: false
+        type: number
+        default: 21
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.event.number || github.ref }}"
+  cancel-in-progress: true
+
+permissions:
+  actions: "write"
+  contents: "read"
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checkout git repository"
+        uses: actions/checkout@v4
+      - name: "set execute permission for gradle wrapper"
+        run: chmod +x ./gradlew
+      - name: "validate gradle wrapper"
+        uses: gradle/actions/wrapper-validation@v4
+      - name: "setup jdk"
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: "${{ inputs.runtime_version }}"
+      - name: "setup gradle"
+        uses: gradle/actions/setup-gradle@v4
+      - name: "run check task"
+        run: ./gradlew check
